@@ -1,13 +1,14 @@
 import std/httpclient
-import std/strutils
+import std/rdstdin
 
-proc getInput*(day: int, year: int, sep: string = "") : seq =
+proc getInputFromAOC*(day: int, year: int) : string =
   var client = newHttpClient()
   let cookieFile = open("cookie.txt")
   defer: cookieFile.close()
   client.headers = newHttpHeaders({ "cookie": cookie_file.readLine() })
-  var input = client.getContent("https://adventofcode.com/" & $year & "/day/" & $day & "/input")
-  if sep == "":
-    return splitLines(input)
-  else:
-    return split(input, sep)
+  return client.getContent("https://adventofcode.com/" & $year & "/day/" & $day & "/input")
+
+proc getInput*(day: int, year: int, network: bool = true) : string =
+  if network:
+    return getInputFromAOC(day, year)
+
