@@ -1,20 +1,13 @@
-import std/httpclient
 import std/strutils
+import aoc
 
 const
     day = 1
     year = 2021
 
-proc getInput() : string =
-  var client = newHttpClient()
-  let cookieFile = open("cookie.txt")
-  defer: cookieFile.close()
-  client.headers = newHttpHeaders({ "cookie": cookie_file.readLine() })
-  return client.getContent("https://adventofcode.com/" & $year & "/day/" & $day & "/input")
-
 var
-  input = splitLines(getInput())
-  count:int = 0
+  input:seq[string] = getInput(day, year)
+  count = 0
 
 discard input.pop()
 
