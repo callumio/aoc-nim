@@ -1,0 +1,15 @@
+import std/httpclient
+import std/strutils
+
+const
+    day = $day$
+    year = $year$
+
+proc getInput() : string =
+  var client = newHttpClient()
+  let cookieFile = open("cookie.txt")
+  defer: cookieFile.close()
+  client.headers = newHttpHeaders({ "cookie": cookie_file.readLine() })
+  return client.getContent("https://adventofcode.com/" & $year & "/day/" & $day & "/input")
+
+var input = splitLines(getInput())
