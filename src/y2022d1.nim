@@ -1,4 +1,4 @@
-import std/[strutils,sequtils,algorithm]
+import std/[strutils,sequtils,algorithm,sugar,times]
 import aoc
 
 const
@@ -6,8 +6,9 @@ const
   year = 2022
 
 var
-  input:seq[string] = getInput(day, year, sep="\n\n")[0..^2]
+  input:string = getInput(day, year)
   output:seq[int]
-
-output = input.mapIt(it.splitLines().mapIt(parseInt(it)).foldl(a+b)).sorted()[^3..^1]
+let time = cpuTime()
+output = split(input, "\n\n")[0..^2].mapIt(it.splitLines().mapIt(parseInt(it)).foldl(a+b)).sorted()[^3..^1]
+echo "Time taken ", cpuTime()-time, "s"
 echo $output[^1] & " " & $output.foldl(a+b)
