@@ -11,7 +11,7 @@ type
 
 var
   input:string = getInput(day, year)
-  output:seq[seq[string]]
+  output:(seq[int],seq[int])
 
 proc translateInput(s:string) : RPS =
     case s:
@@ -46,9 +46,12 @@ proc getScore2(moves:seq[string]) : int =
     score += ((winloss + 1) mod 3) + 1
     (score mod 3) + 1 + (winloss * 3)
 
+proc getScores(moves:seq[string]) : (int, int) =
+    return (getScore1(moves), getScore2(moves))
+
 
 let time = cpuTime()
-output = input.splitLines().mapIt(it.splitWhitespace())[0..^2]
-echo "Task 1 ", $output.mapIt(getScore1(it)).foldl(a+b)
-echo "Task 2 ", $output.mapIt(getScore2(it)).foldl(a+b)
+output = input.splitLines().mapIt(it.splitWhitespace())[0..^2].mapIt(getScores(it)).unzip()
+echo "Task 1 ", $output[0].foldl(a+b)
+echo "Task 2 ", $output[1].foldl(a+b)
 echo "Time taken ", cpuTime()-time, "s"
