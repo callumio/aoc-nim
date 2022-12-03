@@ -11,7 +11,7 @@ type
 
 var
   input:string = getInput(day, year)
-  output:(seq[int],seq[int])
+  total = (0, 0)
 
 proc translateInput(s:string) : RPS =
     case s:
@@ -28,9 +28,7 @@ proc translateInput(s:string) : RPS =
       of "C":
         return RPS.Scissors
 
-proc getScore1(moves:seq[string]) : int =
-    var score:int = ord(translateInput(moves[0]))
-    var score2:int = ord(translateInput(moves[1]))
+proc getScore1(score:int, score2:int) : int =
     var winloss = 0
     if score == score2:
       winloss = 1
@@ -40,18 +38,20 @@ proc getScore1(moves:seq[string]) : int =
       winloss = 2
     return (score2 mod 3) + 1 + winloss * 3
 
-proc getScore2(moves:seq[string]) : int =
-    var score:int = ord(translateInput(moves[0]))
-    var winloss:int = ord(translateInput(moves[1]))
-    score += ((winloss + 1) mod 3) + 1
-    (score mod 3) + 1 + (winloss * 3)
+proc getScore2(score:int, score2:int) : int =
+    return ((score + ((score2 + 1) mod 3) + 1) mod 3) + 1 + (score2 * 3)
 
 proc getScores(moves:seq[string]) : (int, int) =
-    return (getScore1(moves), getScore2(moves))
-
+    var score:int = ord(translateInput(moves[0]))
+    var score2:int = ord(translateInput(moves[1]))
+    return (getScore1(score, score2), getScore2(score, score2))
 
 let time = cpuTime()
-output = input.splitLines().mapIt(it.splitWhitespace())[0..^2].mapIt(getScores(it)).unzip()
-echo "Task 1 ", $output[0].foldl(a+b)
-echo "Task 2 ", $output[1].foldl(a+b)
+
+for i in input.splitLines().mapIt(it.splitWhitespace())[0..^2].mapIt(getScores(it)):
+  total[0] += i[0]
+  total[1] += i[1]
+
+echo "Task 1 and 2 ", $total
+
 echo "Time taken ", cpuTime()-time, "s"
